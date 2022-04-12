@@ -1,4 +1,3 @@
-# build command: docker build --tag ghcr.io/patrick-5546/sailbot_ros2_workspace/dev:raye .
 FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/base:raye
 LABEL org.opencontainers.image.source=https://github.com/patrick-5546/sailbot_ros2_workspace
 
