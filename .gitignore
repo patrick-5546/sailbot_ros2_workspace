@@ -9,3 +9,6 @@ src/*
 
 # Python generated files
 *.pyc
+
+# User-specific configuration files
+.devcontainer/config/user/*
