@@ -1,71 +1,18 @@
-FROM ros:eloquent-ros1-bridge-bionic as athackst
-
-# https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile
-# curl and wget?
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
-  && apt-get -y install --no-install-recommends \
-  bash-completion \
-  cmake \
-  curl \
-  gdb \
-  pylint3 \
-  python-autopep8 \
-  python3-argcomplete \
-  python3-pip \
-  vim \
-  wget \
-  # Clean up
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
-ENV DEBIAN_FRONTEND=dialog
-
-ARG USERNAME=ros
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
-# Create a non-root user
-RUN groupadd --gid $USER_GID $USERNAME \
-  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-  # [Optional] Add sudo support for the non-root user
-  && apt-get update \
-  && apt-get install -y sudo \
-  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-  && chmod 0440 /etc/sudoers.d/$USERNAME \
-  # Cleanup
-  && rm -rf /var/lib/apt/lists/* \
-  && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-ENV DEBIAN_FRONTEND=
-
-
-FROM athackst as dev
-# FROM althack/ros2:foxy-dev 
+FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/dev:raye
 
 # # ** [Optional] Uncomment this section to install additional packages. **
 # ENV DEBIAN_FRONTEND=noninteractive
 # RUN apt-get update \
 #   && apt-get -y install --no-install-recommends \
-#   libjpeg-dev \
-#   python-pip \
-#   python3-tk \
-#   zlib1g-dev \
 #   # Clean up
 #   && apt-get autoremove -y \
 #   && apt-get clean -y \
 #   && rm -rf /var/lib/apt/lists/*
 # ENV DEBIAN_FRONTEND=dialog
 
-# Choose to run as user
 ENV USER ros
 USER ros 
-
-# Change HOME environment variable
 ENV HOME /home/${USER} 
-
-# # ROS2 workspace setup
-# WORKDIR /workspaces/sailbot_ros2_workspace
-# RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash; colcon build --merge-install --symlink-install"
 
 # ROS1 workspace setup
 RUN mkdir -p ${HOME}/catkin_ws/src
@@ -75,6 +22,10 @@ RUN git clone https://github.com/UBCSailbot/local-pathfinding.git src/local-path
 RUN git clone https://github.com/UBCSailbot/sailbot-msg.git src/sailbot-msg
 RUN pip install shapely
 RUN /bin/bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash; catkin_make"
+
+# ROS2 workspace setup
+WORKDIR /workspaces/sailbot_ros2_workspace
+RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash; colcon build --merge-install --symlink-install"
 
 # Persist ROS logs
 RUN mkdir -p ${HOME}/.ros/log \
