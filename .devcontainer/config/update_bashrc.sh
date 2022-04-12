@@ -1,5 +1,7 @@
-# Adding all the necessary ros sourcing
+# Set DISPLAY for X11 forwarding of GUI apps
 echo "export DIPLAY=:0" >> ~/.bashrc
+
+# Adding all the necessary ros sourcing
 echo "" >> ~/.bashrc
 echo "## ROS" >> ~/.bashrc
 echo "source /usr/share/colcon_cd/function/colcon_cd.sh" >> ~/.bashrc
