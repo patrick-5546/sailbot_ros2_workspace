@@ -16,6 +16,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      
+      - name: Prepare docker image name
+        id: image_names
+        run: |
+          IMAGES="ghcr.io/patrick-5546/sailbot_ros2_workspace/dev"
+          echo ::set-output name=images::${IMAGES}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ steps.image_names.outputs.images }}
+          tags: |
+            type=ref,event=tag
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -34,4 +51,9 @@ jobs:
         with:
           context: "{{defaultContext}}:.devcontainer/dev"
           push: true
-          tags: ghcr.io/patrick-5546/sailbot_ros2_workspace/dev
+          tags: ${{ steps.meta.outputs.tags }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
