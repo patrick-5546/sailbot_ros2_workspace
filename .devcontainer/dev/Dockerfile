@@ -8,6 +8,7 @@ RUN apt-get update \
   cmake \
   curl \
   gdb \
+  less \
   pylint3 \
   python-autopep8 \
   python3-argcomplete \

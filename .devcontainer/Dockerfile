@@ -1,4 +1,4 @@
-FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/dev:raye
+FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/dev
 
 # # ** [Optional] Uncomment this section to install additional packages. **
 # ENV DEBIAN_FRONTEND=noninteractive
@@ -10,6 +10,12 @@ FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/dev:raye
 #   && apt-get clean -y \
 #   && rm -rf /var/lib/apt/lists/*
 # ENV DEBIAN_FRONTEND=dialog
+
+# Raye ROS1 sorkspace setup
+WORKDIR /workspaces/catkin_ws
+RUN git clone https://github.com/UBCSailbot/local-pathfinding.git src/local-pathfinding
+RUN git clone https://github.com/UBCSailbot/sailbot-msg.git src/sailbot-msg
+RUN /bin/bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash; catkin_make"
 
 # Device-specific bash setup
 COPY config/update_bashrc.sh /sbin/update_bashrc
