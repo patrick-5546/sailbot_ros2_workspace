@@ -22,7 +22,7 @@ jobs:
       - name: Prepare docker image name
         id: image_names
         run: |
-          IMAGES="ghcr.io/patrick-5546/sailbot_ros2_workspace/dev"
+          IMAGES="${GITHUB_REPOSITORY/docker-/},ghcr.io/${GITHUB_REPOSITORY/docker-/}"
           echo ::set-output name=images::${IMAGES}
 
       - name: Docker meta
