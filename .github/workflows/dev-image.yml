@@ -2,14 +2,14 @@ name: Build Dev Image
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [ main ]
-  #   paths:
-  #     - '.devcontainer/dev/**'
-  # pull_request:
-  #   branches: [ main ]
-  #   paths:
-  #     - '.devcontainer/dev/**'
+  push:
+    branches: [ main ]
+    paths:
+      - '.devcontainer/dev/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.devcontainer/dev/**'
 
 jobs:
   docker:

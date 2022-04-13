@@ -2,6 +2,7 @@
 FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/base:ros_eloquent-ompl_1_5_0_python3 as builder
 
 ###################### ROS1 Setup ######################
+# https://github.com/osrf/docker_images/blob/master/ros/eloquent/ubuntu/bionic/ros1-bridge/Dockerfile
 # setup sources.list
 RUN echo "deb http://packages.ros.org/ros/ubuntu bionic main" > /etc/apt/sources.list.d/ros1-latest.list
 
@@ -13,16 +14,16 @@ ENV ROS2_DISTRO eloquent
 
 # install ros packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-melodic-ros-comm=1.14.11-1* \
-    ros-melodic-roscpp-tutorials=0.9.3-1* \
-    ros-melodic-rospy-tutorials=0.9.3-1* \
+    ros-melodic-ros-comm \
+    ros-melodic-roscpp-tutorials \
+    ros-melodic-rospy-tutorials \
     && rm -rf /var/lib/apt/lists/*
 
 # install ros2 packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-eloquent-ros1-bridge=0.8.3-1* \
-    ros-eloquent-demo-nodes-cpp=0.8.4-1* \
-    ros-eloquent-demo-nodes-py=0.8.4-1* \
+    ros-eloquent-ros1-bridge \
+    ros-eloquent-demo-nodes-cpp \
+    ros-eloquent-demo-nodes-py \
     && rm -rf /var/lib/apt/lists/*
 
 # install downstream packages
@@ -34,8 +35,10 @@ FROM builder
 LABEL org.opencontainers.image.source=https://github.com/patrick-5546/sailbot_ros2_workspace
 
 ###################### Raye Software Setup ######################
-COPY . /ompl
-WORKDIR /ompl
-RUN ./ompl_install_instructions.bash
+# https://github.com/UBCSailbot/local-pathfinding/tree/master/install
+COPY . /ompl-raye
+WORKDIR /ompl-raye
+RUN ./install-raye-dependencies.bash
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /

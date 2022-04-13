@@ -7,4 +7,6 @@ COPY . /ompl
 WORKDIR /ompl
 RUN ./install-ompl-ubuntu-python3.sh --python
 
+# Clean image
+RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 WORKDIR /

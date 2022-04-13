@@ -1,6 +1,4 @@
 FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/base:raye as builder
-LABEL org.opencontainers.image.source=https://github.com/patrick-5546/sailbot_ros2_workspace
-
 # https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile
 # curl and wget?
 ENV DEBIAN_FRONTEND=noninteractive
@@ -40,22 +38,20 @@ RUN groupadd --gid $USER_GID $USERNAME \
 ENV DEBIAN_FRONTEND=
 
 FROM builder
+LABEL org.opencontainers.image.source=https://github.com/patrick-5546/sailbot_ros2_workspace
 
 ENV USER ros
 USER ros
 ENV HOME /home/${USER}
 
 # ROS1 workspace setup
-RUN mkdir -p ${HOME}/catkin_ws/src
-WORKDIR ${HOME}/catkin_ws
-RUN /bin/bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash; catkin_make"
-RUN git clone https://github.com/UBCSailbot/local-pathfinding.git src/local-pathfinding
-RUN git clone https://github.com/UBCSailbot/sailbot-msg.git src/sailbot-msg
-RUN pip install shapely
+WORKDIR /workspaces/catkin_ws
+RUN mkdir src
 RUN /bin/bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash; catkin_make"
 
 # ROS2 workspace setup
 WORKDIR /workspaces/sailbot_ros2_workspace
+RUN mkdir src
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash; colcon build --merge-install --symlink-install"
 
 # Persist ROS logs
