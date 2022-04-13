@@ -12,3 +12,4 @@ src/*
 
 # User-specific configuration files
 .devcontainer/config/user/*
+!.devcontainer/config/user/.gitkeep
