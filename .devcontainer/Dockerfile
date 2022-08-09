@@ -13,3 +13,7 @@ FROM ghcr.io/patrick-5546/sailbot_ros2_workspace/dev
 
 # Copy device-specific configuration files (e.g. .vimrc) in config/user/ to the home directory
 COPY config/user ${HOME}
+
+# Set up auto-source of workspace for ros user
+ARG WORKSPACE
+RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc
