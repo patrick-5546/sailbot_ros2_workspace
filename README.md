@@ -1,4 +1,8 @@
-# VSCode ROS2 Workspace Template
+# Sailbot ROS 2 Workspace
+
+The repository I used to test how this template repo works and how I can adapt it for Sailbot's new project software development.
+
+**August 10, 2022 Update:** archived, used my learnings to create https://github.com/UBCSailbot/software_workspace
 
 This template will get you set up using ROS2 with VSCode as your IDE.
 
